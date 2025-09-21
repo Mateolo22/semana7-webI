@@ -1,60 +1,51 @@
-// Funciones de alman¿cenamiento//
-function getStudents(){
-    returnJSON.parse(localStorage.getItem("students")) || [];
+// Funciones de almacenamiento
+function getStudents() {
+    return JSON.parse(localStorage.getItem('students')) || [];
 }
 
-function saveStudents(student){
+function saveStudents(student) {
     const students = getStudents();
-    students.push(student);
-    localStorage.setItem("students", JSON.stringify(students));
+    students.push(student)
+    localStorage.setItem('students', JSON.stringify(students));
 }
 
-function saveStudents(students){
-    localStorage.setItem("students", JSON.stringify(students));
-}
 
-function deleteStudent(index){
+function deleteStudent(index) {
     const students = getStudents();
-    if ( index >= 0 && index < students.length){
-        students.splice(index, 1);
-        saveStudents(students);
-        renderList();
-    }
-   
+    students.splice(index, 1); // Ahora 'index' sí tiene el valor correcto.
+    localStorage.setItem("students", JSON.stringify(students));
+    renderList(); // Vuelve a dibujar la lista para reflejar los cambios.
 }
 
+    //Router
 
-//Router//
-
-function router(){
-    const path = location.hash.slice(1) || "/";
-    const app = document.getElementById("app");
+function router() {
+    const path = location.hash.slice(1) || '/';
+    const app = document.getElementById('app');
     app.innerHTML = "";
 
-    let templateId
+    let templateID;
 
-    if(path === "/"){
-        templateId = "form-template"
-    } else if(path === "/lista"){
-        templateId = "list-template";
-    } else{
-        templateId = "404-template"
+    if (path === "/") {
+        templateID = "form-template";
+    } else if (path === "/lista") {
+        templateID = "list-template";
+    } else {
+        templateID = "404-template";
     }
 
-    const template = document.getElementById(templateId);
+    const template = document.getElementById(templateID);
     app.appendChild(template.content.cloneNode(true));
 
-    if (path === "/"){
+    if (path === "/") {
         attachFormLogic();
-    } else if (path === "/lista"){
+    } else if (path === "/lista") {
         renderList();
     }
 }
 
-
-// logica de formulario //
-
-function attachFormLogic(){
+// logica del formulario
+function attachFormLogic() {
     const form = document.getElementById("studentForm");
     form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -63,53 +54,50 @@ function attachFormLogic(){
         const n2 = parseFloat(document.getElementById("nota2").value);
         const n3 = parseFloat(document.getElementById("nota3").value);
 
-        if (!name || isNaN(n1) || isNaN(n2) || isNaN(n3)){
+        if (!name || isNaN(n1) || isNaN(n2) || isNaN(n3)) {
             document.getElementById("msg").textContent =
-            " Debes llenar todos los campos.";
+            "Debes llenar todos los campos.";
             return;
         }
 
         const avg = ((n1 + n2 + n3) / 3).toFixed(2);
         saveStudents({ name, avg});
-        
 
-        document.getElementById("msg").textContent = `✅Estudiante ${name} con promedio ${avg.toFixed(2)} guardado con exito.`;
+        document.getElementById("msg").textContent = `✅Estudiante ${name} con promedio ${avg} agregado con exito.`;
         form.reset();
-        
     });
-}
+}    
 
+// logica de la lista
 
-function renderList(){
+function renderList() {
     const students = getStudents();
     const list = document.getElementById("studentList");
 
     list.innerHTML = "";
 
-    if (students.length === 0){
+    if (students.length === 0) {
         const empty = document.createElement("li");
-        empty.textContent = "No hay estudiantes registrado";
+        empty.textContent = "No hay estudiantes registrados.";
         list.appendChild(empty);
         return;
-
     }
 
     const template = document.getElementById("student-item-template");
 
-    students.forEach((s, i) =>{
-        const clone = template.contentEditable.cloneNode(true);
+    students.forEach((s, i) => {
+        const clone = template.content.cloneNode(true);
 
         clone.querySelector(".student-name").textContent = s.name;
-        clone.querySelector(".student-avg").textContent = s.avg.toFixed(2);
+        clone.querySelector(".student-avg").textContent = s.avg;
 
-        clone.querySelector("delete-btn").addEventListener("click", () =>{
+        clone.querySelector(".delete-btn").addEventListener("click", () => {
             deleteStudent(i);
-        })
+        });
 
         list.appendChild(clone);
-    
-});
+    });
 }
 
 window.addEventListener("hashchange", router);
-window.addEventListener();
+window.addEventListener("DOMContentLoaded", router);
