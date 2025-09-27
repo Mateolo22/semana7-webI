@@ -9,7 +9,6 @@ function saveStudents(student) {
     localStorage.setItem('students', JSON.stringify(students));
 }
 
-
 function deleteStudent(index) {
     const students = getStudents();
     students.splice(index, 1); // Ahora 'index' sí tiene el valor correcto.
@@ -17,8 +16,7 @@ function deleteStudent(index) {
     renderList(); // Vuelve a dibujar la lista para reflejar los cambios.
 }
 
-    //Router
-
+// Router
 function router() {
     const path = location.hash.slice(1) || '/';
     const app = document.getElementById('app');
@@ -44,7 +42,7 @@ function router() {
     }
 }
 
-// logica del formulario
+// Lógica del formulario
 function attachFormLogic() {
     const form = document.getElementById("studentForm");
     form.addEventListener("submit", (e) => {
@@ -63,13 +61,12 @@ function attachFormLogic() {
         const avg = ((n1 + n2 + n3) / 3).toFixed(2);
         saveStudents({ name, avg});
 
-        document.getElementById("msg").textContent = `✅Estudiante ${name} con promedio ${avg} agregado con exito.`;
+        document.getElementById("msg").textContent = `✅ Estudiante ${name} con promedio ${avg} agregado con éxito.`;
         form.reset();
     });
-}    
+}
 
-// logica de la lista
-
+// Lógica de la lista
 function renderList() {
     const students = getStudents();
     const list = document.getElementById("studentList");
